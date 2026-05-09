@@ -1,0 +1,61 @@
+<%# Basecoat Sidebar Partial — digunakan dengan: include('../partials/sidebar', { currentPage, user }) %>
+
+<aside class="sidebar" id="main-sidebar" data-side="left" aria-hidden="false">
+  <nav aria-label="Sidebar navigation">
+
+    <!-- Brand header -->
+    <header class="flex items-center gap-2 px-4 py-3 border-b border-border">
+      <div class="flex items-center justify-center size-8 rounded-lg bg-primary text-primary-foreground text-sm font-bold">F</div>
+      <span class="font-semibold text-sm">FTI Project</span>
+    </header>
+
+    <section class="scrollbar flex-1 py-2">
+      <!-- Menu Utama -->
+      <div role="group" aria-labelledby="group-main">
+        <h3 id="group-main">Menu Utama</h3>
+        <ul>
+          <li>
+            <a href="/dashboard" <%= currentPage === 'dashboard' ? 'aria-current="page"' : '' %>>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+              <span>Dashboard</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Menu Admin -->
+      <% if (user.role === 'admin') { %>
+      <div role="group" aria-labelledby="group-admin">
+        <h3 id="group-admin">Administrasi</h3>
+        <ul>
+          <li>
+            <a href="/admin/users" <%= currentPage === 'admin-users' ? 'aria-current="page"' : '' %>>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <span>Kelola Users</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <% } %>
+    </section>
+
+    <!-- Footer: user info + logout -->
+    <footer class="border-t border-border p-3">
+      <div class="flex items-center gap-3 px-1 py-2 rounded-lg">
+        <div class="flex items-center justify-center size-8 rounded-full bg-muted text-xs font-semibold uppercase shrink-0">
+          <%= user.name.charAt(0) %>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium truncate"><%= user.name %></p>
+          <p class="text-xs text-muted-foreground truncate"><%= user.email %></p>
+        </div>
+        <span class="badge-outline text-xs shrink-0"><%= user.role %></span>
+      </div>
+      <button id="logoutBtn" type="button" class="btn-outline w-full mt-2 text-sm justify-start gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+        Keluar
+      </button>
+    </footer>
+
+  </nav>
+</aside>

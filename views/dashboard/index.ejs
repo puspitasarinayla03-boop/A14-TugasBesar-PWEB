@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> — FTI Project</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/basecoat-css@0.3.11/dist/basecoat.cdn.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/basecoat-css@0.3.11/dist/js/basecoat.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/basecoat-css@0.3.11/dist/js/sidebar.min.js" defer></script>
+</head>
+<body class="h-full bg-background text-foreground">
+
+  <!-- Sidebar -->
+  <%- include('../partials/sidebar', { currentPage: 'dashboard' }) %>
+
+  <main>
+    <!-- Topbar mobile -->
+    <header class="sticky top-0 z-10 border-b border-border bg-background/80 backdrop-blur flex items-center gap-3 px-4 py-3 md:hidden">
+      <button type="button" onclick="document.dispatchEvent(new CustomEvent('basecoat:sidebar'))" aria-label="Toggle sidebar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      </button>
+      <span class="font-semibold">Dashboard</span>
+    </header>
+
+    <div class="p-6 max-w-5xl">
+      <div class="mb-6">
+        <h1 class="text-2xl font-bold tracking-tight">Dashboard</h1>
+        <p class="text-muted-foreground">Selamat datang, <strong><%= user.name %></strong>!</p>
+      </div>
+
+      <!-- Alert info role -->
+      <div class="alert mb-6" role="alert">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        <span>
+          Anda login sebagai <strong><%= user.role %></strong>.
+          <% if (user.role === 'admin') { %>Anda memiliki akses penuh termasuk manajemen user.
+          <% } else { %>Anda memiliki akses sebagai pengguna reguler.<% } %>
+        </span>
+      </div>
+
+      <!-- Stats cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        <!-- Profil -->
+        <div class="card">
+          <header><h2 class="text-sm font-medium">Akun Saya</h2></header>
+          <section>
+            <p class="text-xl font-bold"><%= user.name %></p>
+            <p class="text-muted-foreground text-sm truncate"><%= user.email %></p>
+          </section>
+          <footer><span class="badge-outline"><%= user.role %></span></footer>
+        </div>
+
+        <!-- ACL Status -->
+        <div class="card">
+          <header><h2 class="text-sm font-medium">Status Akses (ACL)</h2></header>
+          <section class="space-y-2 text-sm">
+            <div class="flex items-center justify-between">
+              <span class="text-muted-foreground">Dashboard</span>
+              <span class="badge text-xs bg-green-100 text-green-700 border-green-200">✓ Diizinkan</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-muted-foreground">Kelola Users</span>
+              <% if (user.role === 'admin') { %>
+                <span class="badge text-xs bg-green-100 text-green-700 border-green-200">✓ Diizinkan</span>
+              <% } else { %>
+                <span class="badge text-xs bg-red-100 text-red-700 border-red-200">✗ Ditolak</span>
+              <% } %>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-muted-foreground">Hapus User</span>
+              <% if (user.role === 'admin') { %>
+                <span class="badge text-xs bg-green-100 text-green-700 border-green-200">✓ Diizinkan</span>
+              <% } else { %>
+                <span class="badge text-xs bg-red-100 text-red-700 border-red-200">✗ Ditolak</span>
+              <% } %>
+            </div>
+          </section>
+        </div>
+
+        <!-- JWT -->
+        <div class="card">
+          <header><h2 class="text-sm font-medium">JWT Session</h2></header>
+          <section>
+            <p class="text-sm text-muted-foreground">Token aktif via HttpOnly Cookie</p>
+            <p class="text-xs text-muted-foreground mt-1">Aman dari serangan XSS</p>
+          </section>
+          <footer><span class="badge text-xs bg-green-100 text-green-700 border-green-200">● Aktif</span></footer>
+        </div>
+      </div>
+
+      <!-- Admin panel link -->
+      <% if (user.role === 'admin') { %>
+      <div class="card">
+        <header>
+          <h2>Panel Administrasi</h2>
+          <p>Fitur khusus Administrator — tidak tersedia untuk role lain</p>
+        </header>
+        <section>
+          <p class="text-sm text-muted-foreground mb-4">Kelola semua akun pengguna, ubah status, dan hapus user.</p>
+          <a href="/admin/users" class="btn inline-flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Kelola Users
+          </a>
+        </section>
+      </div>
+      <% } %>
+    </div>
+  </main>
+
+  <script>
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await fetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
+      window.location.href = '/login';
+    });
+  </script>
+</body>
+</html>

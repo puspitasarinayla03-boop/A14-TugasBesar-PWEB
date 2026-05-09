@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> — FTI Project</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/basecoat-css@0.3.11/dist/basecoat.cdn.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/basecoat-css@0.3.11/dist/js/basecoat.min.js" defer></script>
+</head>
+<body class="h-full bg-background text-foreground flex items-center justify-center p-6">
+  <div class="text-center max-w-md">
+    <p class="text-6xl font-black text-muted-foreground/30 mb-4">403</p>
+    <h1 class="text-2xl font-bold mb-2">Akses Ditolak</h1>
+    <p class="text-muted-foreground text-sm mb-6">
+      Anda tidak memiliki hak akses untuk halaman ini.
+      Halaman ini hanya tersedia untuk role tertentu.
+    </p>
+    <a href="/dashboard" class="btn inline-flex items-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+      Kembali ke Dashboard
+    </a>
+  </div>
+</body>
+</html>
