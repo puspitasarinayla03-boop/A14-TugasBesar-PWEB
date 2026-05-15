@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> — FTI Project</title>
+  <!-- Basecoat UI CSS (Lokal dari node_modules) -->
+  <link rel="stylesheet" href="/basecoat/basecoat.min.css" />
+  <!-- Basecoat UI JS (Lokal dari node_modules) -->
+  <script src="/basecoat/js/basecoat.min.js" defer></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;900&display=swap');
+    :root {
+      --bc-font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      --fti-blue: #70869e;
+      --fti-blue-dark: #5b6f85;
+      --bc-color-primary: var(--fti-blue);
+      --bc-border-radius: 8px;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      font-family: var(--bc-font-family);
+      background-color: #f4f6f8;
+      color: #334155;
+    }
+    .container {
+      text-align: center;
+      max-width: 420px;
+      padding: 2.5rem 2rem;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px -10px rgba(112, 134, 158, 0.15);
+    }
+    .error-code {
+      font-size: 5rem;
+      font-weight: 900;
+      color: #e2e8f0;
+      line-height: 1;
+      margin: 0 0 1rem 0;
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin: 0 0 0.5rem 0;
+    }
+    p {
+      color: #64748b;
+      font-size: 0.875rem;
+      margin: 0 0 2rem 0;
+      line-height: 1.5;
+    }
+    .btn-dark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.8rem 1rem;
+      background-color: var(--fti-blue);
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.2s;
+    }
+    .btn-dark:hover { background-color: var(--fti-blue-dark); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Optional: Area untuk Logo FTI -->
+    <img src="/images/fti-logo.png" alt="Logo FTI Unand" style="height: 60px; width: auto; max-width: 100%; object-fit: contain; margin: 0 auto 1rem auto; display: block;" onerror="this.style.display='none'">
+    
+    <div class="error-code">403</div>
+    <h1>Akses Ditolak</h1>
+    <p>Maaf, Anda tidak memiliki hak akses untuk membuka halaman ini. Halaman ini hanya tersedia untuk peran (*role*) tertentu.</p>
+    
+    <a href="/dashboard" class="btn-dark">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      Kembali ke Dashboard
+    </a>
+  </div>
+</body>
+</html>
