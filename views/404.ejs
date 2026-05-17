@@ -1,22 +1,69 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full">
+<html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title><%= title %> — FTI Project</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/basecoat-css@0.3.11/dist/basecoat.cdn.min.css" />
+  <link rel="stylesheet" href="/basecoat/basecoat.min.css"/>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #f4f6f8;
+      color: #334155;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .error-page {
+      text-align: center;
+      max-width: 420px;
+      padding: 2rem;
+    }
+    .error-code {
+      font-size: 6rem;
+      font-weight: 800;
+      color: #e2e8f0;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+    .error-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 0 0 0.75rem;
+    }
+    .error-desc {
+      font-size: 0.95rem;
+      color: #64748b;
+      margin: 0 0 2rem;
+    }
+    .btn-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.5rem;
+      background: #70869e;
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    .btn-home:hover { background: #5b6f85; }
+  </style>
 </head>
-<body class="h-full bg-background text-foreground flex items-center justify-center p-6">
-  <div class="text-center max-w-md">
-    <p class="text-6xl font-black text-muted-foreground/30 mb-4">404</p>
-    <h1 class="text-2xl font-bold mb-2">Halaman Tidak Ditemukan</h1>
-    <p class="text-muted-foreground text-sm mb-6">
-      Halaman yang Anda cari tidak ada atau sudah dipindahkan.
-    </p>
-    <a href="/" class="btn inline-flex items-center gap-2">
+<body>
+  <div class="error-page">
+    <p class="error-code">404</p>
+    <h1 class="error-title"><%= title || 'Halaman Tidak Ditemukan' %></h1>
+    <p class="error-desc">Halaman yang Anda cari tidak ada atau sudah dipindahkan.</p>
+    <a href="/dashboard" class="btn-home">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
-      Kembali ke Beranda
+      Ke Dashboard
     </a>
   </div>
 </body>

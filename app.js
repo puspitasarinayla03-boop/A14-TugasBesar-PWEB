@@ -1,16 +1,15 @@
-
 'use strict';
 
 require('dotenv').config();
 
-const express      = require('express');
-const cookieParser = require('cookie-parser');
-const path         = require('path');
+const express = require('express');
+const session = require('express-session');
+const path    = require('path');
 
 // ── Import routes ─────────────────────────────────
-const authRoutes = require('./routes/authRoutes');
-const userRoutes = require('./routes/userRoutes');
-const pageRoutes = require('./routes/pageRoutes');
+const authRoutes    = require('./routes/authRoutes');
+const pageRoutes    = require('./routes/pageRoutes');
+const projectRoutes = require('./routes/projectRoutes');
 
 // ── Inisialisasi Express ──────────────────────────
 const app  = express();
@@ -24,32 +23,32 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/basecoat', express.static(path.join(__dirname, 'node_modules/basecoat-css/dist')));
 
-// ── Global Middleware ─────────────────────────────
+// ── Body Parser ───────────────────────────────────
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+
+// ── Session ───────────────────────────────────────
+app.use(session({
+  secret:            process.env.SESSION_SECRET || 'fti_secret_dev',
+  resave:            false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure:   process.env.NODE_ENV === 'production',
+    maxAge:   24 * 60 * 60 * 1000, // 1 hari
+  },
+}));
 
 // ── Security ──────────────────────────────────────
 app.disable('x-powered-by');
 
-// ── Page Routes (HTML/EJS) — harus sebelum API ───
-app.use('/', pageRoutes);
-
-// ── API Routes (JSON) ─────────────────────────────
-app.use('/api/auth',  authRoutes);
-app.use('/api/users', userRoutes);
-
-// ── Health check ──────────────────────────────────
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date().toISOString() });
-});
+// ── Routes ────────────────────────────────────────
+app.use('/',             pageRoutes);
+app.use('/auth',         authRoutes);
+app.use('/api/projects', projectRoutes);
 
 // ── 404 Handler ───────────────────────────────────
 app.use((req, res) => {
-  if (req.path.startsWith('/api/')) {
-    return res.status(404).json({ success: false, message: 'Endpoint tidak ditemukan.' });
-  }
-  // Untuk request halaman, render view 404
   res.status(404).render('404', { title: 'Halaman Tidak Ditemukan' });
 });
 
@@ -57,13 +56,7 @@ app.use((req, res) => {
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   console.error('[GlobalError]', err.message);
-  if (req.path.startsWith('/api/')) {
-    return res.status(err.status || 500).json({
-      success: false,
-      message: err.message || 'Terjadi kesalahan server.',
-    });
-  }
-  res.status(500).render('404', { title: 'Kesalahan Server' });
+  res.status(err.status || 500).render('404', { title: 'Kesalahan Server' });
 });
 
 // ── Start Server ──────────────────────────────────

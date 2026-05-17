@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title><%= title %> — FTI Project</title>
+  <link rel="stylesheet" href="/basecoat/basecoat.min.css"/>
+  <script src="/basecoat/js/basecoat.min.js" defer></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--fti-blue:#70869e;--fti-blue-dark:#5b6f85;}
+    body{margin:0;font-family:'Inter',system-ui,sans-serif;background:#f4f6f8;color:#334155;display:flex;min-height:100vh;}
+    main{flex:1;padding:2rem;max-width:900px;margin:0 auto;width:100%;box-sizing:border-box;}
+    .page-header{margin-bottom:2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+    .header-left{display:flex;align-items:center;gap:1rem;}
+    .page-title{font-size:1.5rem;font-weight:700;color:#1e293b;margin:0;}
+    .btn-back{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem .9rem;background:#f1f5f9;color:#475569;border:none;border-radius:8px;font-size:.85rem;font-weight:500;text-decoration:none;transition:background .2s;}
+    .btn-back:hover{background:#e2e8f0;}
+    .header-actions{display:flex;gap:.75rem;}
+    .btn-edit{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;background:#fef3c7;color:#92400e;border:none;border-radius:8px;font-size:.875rem;font-weight:500;text-decoration:none;transition:background .2s;}
+    .btn-edit:hover{background:#fde68a;}
+    .btn-delete-action{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;background:#fee2e2;color:#991b1b;border:none;border-radius:8px;font-size:.875rem;font-weight:500;cursor:pointer;transition:background .2s;font-family:inherit;}
+    .btn-delete-action:hover:not(:disabled){background:#fca5a5;}
+    .btn-delete-action:disabled{opacity:.65;cursor:not-allowed;}
+    .card{background:#fff;border-radius:12px;box-shadow:0 4px 20px -4px rgba(112,134,158,.15);padding:2rem;margin-bottom:1.5rem;}
+    .card-title{font-size:1rem;font-weight:600;color:#1e293b;margin:0 0 1.5rem;padding-bottom:.75rem;border-bottom:1px solid #f1f5f9;}
+    .skeleton{background:linear-gradient(90deg,#f1f5f9 25%,#e2e8f0 50%,#f1f5f9 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:6px;height:20px;margin-bottom:1rem;}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    .detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;}
+    .detail-item label{display:block;font-size:.75rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.35rem;}
+    .detail-item p{margin:0;font-size:.95rem;color:#1e293b;font-weight:500;}
+    .badge{display:inline-block;padding:.3rem .85rem;border-radius:20px;font-size:.8rem;font-weight:600;}
+    .badge-aktif{background:#dcfce7;color:#166534;}
+    .badge-pending{background:#fef3c7;color:#92400e;}
+    .badge-selesai{background:#dbeafe;color:#1e40af;}
+    .desc-section{margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid #f1f5f9;}
+    .desc-section label{display:block;font-size:.75rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem;}
+    .desc-section p{margin:0;font-size:.95rem;color:#475569;line-height:1.6;}
+    .meta-row{display:flex;gap:2rem;flex-wrap:wrap;margin-top:1rem;padding-top:1rem;border-top:1px solid #f8fafc;}
+    .meta-item label{font-size:.75rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:.2rem;}
+    .meta-item p{margin:0;font-size:.82rem;color:#64748b;}
+    .toast{position:fixed;top:1.25rem;right:1.25rem;padding:.85rem 1.25rem;border-radius:10px;font-size:.875rem;font-weight:500;z-index:9999;display:none;align-items:center;gap:.6rem;box-shadow:0 8px 24px -4px rgba(0,0,0,.15);}
+    .toast.show{display:flex;}
+    .toast-error{background:#fee2e2;color:#991b1b;}
+  </style>
+</head>
+<body>
+  <%- include('../partials/sidebar', { currentPage: 'projects', user: user }) %>
+
+  <div id="toast" class="toast toast-error" role="alert"></div>
+
+  <main>
+    <div class="page-header">
+      <div class="header-left">
+        <a href="/projects" class="btn-back" id="btn-back">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Kembali
+        </a>
+        <h1 class="page-title" id="page-title">Detail Project</h1>
+      </div>
+      <div class="header-actions" id="header-actions" style="display:none">
+        <a href="/projects/<%- projectId %>/edit" class="btn-edit" id="btn-edit">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Edit
+        </a>
+        <button class="btn-delete-action" id="btn-delete">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          Hapus
+        </button>
+      </div>
+    </div>
+
+    <div class="card" id="detail-card">
+      <div class="skeleton" style="width:60%;height:24px"></div>
+      <div class="skeleton" style="width:30%;height:18px"></div>
+      <div class="skeleton" style="width:45%;height:18px"></div>
+    </div>
+  </main>
+
+  <script>
+    const PROJECT_ID  = '<%- projectId %>';
+    const detailCard  = document.getElementById('detail-card');
+    const pageTitle   = document.getElementById('page-title');
+    const headerActs  = document.getElementById('header-actions');
+    const btnDelete   = document.getElementById('btn-delete');
+    const toast       = document.getElementById('toast');
+    let   projectName = '';
+
+    function showToast(msg) {
+      toast.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg><span>${msg}</span>`;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function fmt(d) {
+      if (!d) return '—';
+      return new Date(d).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
+    function badgeHtml(status) {
+      return `<span class="badge badge-${status}">${status.charAt(0).toUpperCase() + status.slice(1)}</span>`;
+    }
+
+    function renderDetail(p) {
+      projectName     = p.name;
+      pageTitle.textContent = p.name;
+      headerActs.style.display = 'flex';
+
+      detailCard.innerHTML = `
+        <h2 class="card-title">Detail Project</h2>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label>Nama Project</label>
+            <p>${p.name}</p>
+          </div>
+          <div class="detail-item">
+            <label>Status</label>
+            ${badgeHtml(p.status)}
+          </div>
+          <div class="detail-item">
+            <label>Tanggal Mulai</label>
+            <p>${fmt(p.start_date)}</p>
+          </div>
+          <div class="detail-item">
+            <label>Tanggal Selesai</label>
+            <p>${fmt(p.end_date)}</p>
+          </div>
+        </div>
+        ${p.description ? `
+        <div class="desc-section">
+          <label>Deskripsi</label>
+          <p>${p.description}</p>
+        </div>` : ''}
+        <div class="meta-row">
+          <div class="meta-item"><label>Dibuat</label><p>${fmt(p.created_at)}</p></div>
+          <div class="meta-item"><label>Terakhir Diupdate</label><p>${fmt(p.updated_at)}</p></div>
+        </div>`;
+    }
+
+    async function loadProject() {
+      try {
+        const res  = await fetch(`/api/projects/${PROJECT_ID}`);
+        const data = await res.json();
+        if (data.success) {
+          renderDetail(data.data);
+        } else {
+          detailCard.innerHTML = `<p style="color:#ef4444;text-align:center">${data.message}</p>`;
+        }
+      } catch {
+        detailCard.innerHTML = `<p style="color:#ef4444;text-align:center">Gagal memuat data project.</p>`;
+      }
+    }
+
+    btnDelete.addEventListener('click', async () => {
+      if (!confirm(`Hapus project "${projectName}"?`)) return;
+      btnDelete.disabled = true;
+      btnDelete.textContent = 'Menghapus...';
+
+      try {
+        const res  = await fetch(`/api/projects/${PROJECT_ID}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+          window.location.href = '/projects';
+        } else {
+          showToast(data.message || 'Gagal menghapus project.');
+          btnDelete.disabled = false;
+          btnDelete.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg> Hapus`;
+        }
+      } catch {
+        showToast('Tidak dapat terhubung ke server.');
+        btnDelete.disabled = false;
+      }
+    });
+
+    loadProject();
+  </script>
+</body>
+</html>

@@ -1,20 +1,20 @@
 {
   "name": "fti-project",
   "version": "1.0.0",
-  "description": "FTI Project - ExpressJS with JWT Auth & ACL",
+  "description": "FTI Project - Internal Web App",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev":   "nodemon app.js",
+    "seed":  "node seeders/adminSeeder.js"
   },
   "dependencies": {
     "basecoat-css": "^0.3.11",
-    "bcrypt": "^5.1.1",
-    "cookie-parser": "^1.4.6",
+    "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
-    "jsonwebtoken": "^9.0.2",
+    "express-session": "^1.18.1",
     "mysql2": "^3.9.7"
   },
   "devDependencies": {

@@ -1,0 +1,44 @@
+<%#
+  Partial: header.ejs
+  Usage : <%- include('../partials/header', { title: 'Judul Halaman' }) %>
+
+  Render tag <head> lengkap dengan:
+  - Meta tags SEO
+  - Basecoat UI CSS & JS
+  - Google Fonts (Inter)
+  - CSS variables FTI
+%>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="FTI Project — Sistem manajemen kegiatan internal Fakultas Teknologi Informasi"/>
+  <title><%= title %> — FTI Project</title>
+
+  <!-- Basecoat UI -->
+  <link rel="stylesheet" href="/basecoat/basecoat.min.css"/>
+  <script src="/basecoat/js/basecoat.min.js" defer></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --fti-blue:      #70869e;
+      --fti-blue-dark: #5b6f85;
+      --bc-font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin:      0;
+      font-family: var(--bc-font-family);
+      background:  #f4f6f8;
+      color:       #334155;
+    }
+  </style>
+  <%# Blok style opsional dari halaman yang meng-include partial ini %>
+  <%- typeof extraStyles !== 'undefined' ? extraStyles : '' %>
+</head>

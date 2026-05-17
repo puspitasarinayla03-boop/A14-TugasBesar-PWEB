@@ -3,25 +3,13 @@
 const express = require('express');
 const router  = express.Router();
 
-const { login, logout, getProfile } = require('../controllers/authController');
-const { verifyToken, redirectIfAuthenticated } = require('../middlewares/authMiddleware');
+const { login, logout }                        = require('../controllers/authController');
+const { redirectIfAuthenticated, isAuthenticated } = require('../middlewares/authMiddleware');
 
-// ─────────────────────────────────────────────────────────────
-// PUBLIC ROUTES  (tidak butuh token)
-// ─────────────────────────────────────────────────────────────
+// POST /auth/login
+router.post('/login', redirectIfAuthenticated, login);
 
-
-// POST /auth/login     → autentikasi & terbitkan JWT
-router.post('/login',    redirectIfAuthenticated, login);
-
-// ─────────────────────────────────────────────────────────────
-// PROTECTED ROUTES  (butuh token valid)
-// ─────────────────────────────────────────────────────────────
-
-// POST /auth/logout  → hapus cookie token
-router.post('/logout', verifyToken, logout);
-
-// GET  /auth/me      → kembalikan profil user yang sedang login
-router.get('/me',     verifyToken, getProfile);
+// POST /auth/logout
+router.post('/logout', isAuthenticated, logout);
 
 module.exports = router;

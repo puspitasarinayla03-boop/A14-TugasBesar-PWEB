@@ -1,42 +1,71 @@
--- ============================================
--- DATABASE SCHEMA: Authentication & ACL System
--- ============================================
+-- ================================================
+-- FTI Project — Database Schema
+-- ================================================
 
-CREATE DATABASE IF NOT EXISTS fti_project CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE fti_project;
+CREATE DATABASE IF NOT EXISTS `fti_project`
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
 
--- Tabel roles (dibuat lebih dulu karena direferensikan oleh users)
-CREATE TABLE IF NOT EXISTS roles (
-    id        INT UNSIGNED    NOT NULL AUTO_INCREMENT,
-    name      VARCHAR(50)     NOT NULL UNIQUE,          -- contoh: 'admin', 'user'
-    label     VARCHAR(100)    NOT NULL,                 -- label tampilan: 'Administrator', 'Regular User'
-    created_at TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id)
-) ENGINE=InnoDB;
+USE `fti_project`;
 
--- Tabel users
-CREATE TABLE IF NOT EXISTS users (
-    id          INT UNSIGNED    NOT NULL AUTO_INCREMENT,
-    name        VARCHAR(150)    NOT NULL,
-    email       VARCHAR(255)    NOT NULL UNIQUE,
-    password    VARCHAR(255)    NOT NULL,               -- bcrypt hash, bukan plain text!
-    role_id     INT UNSIGNED    NOT NULL DEFAULT 2,     -- default ke role 'user'
-    is_active   TINYINT(1)      NOT NULL DEFAULT 1,
-    created_at  TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at  TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (id),
-    CONSTRAINT fk_users_role FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB;
+-- ── Users ─────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS `users` (
+    `id`                        INT UNSIGNED     NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name`                      VARCHAR(255)     NOT NULL,
+    `email`                     VARCHAR(255)     NOT NULL UNIQUE,
+    `password`                  VARCHAR(255)     NOT NULL,
+    `email_verified_at`         DATETIME         DEFAULT NULL,
+    `remember_token`            VARCHAR(255)     DEFAULT NULL,
+    `two_factor_secret`         TEXT             DEFAULT NULL,
+    `two_factor_recovery_codes` TEXT             DEFAULT NULL,
+    `two_factor_confirmed_at`   DATETIME         DEFAULT NULL,
+    `created_at`                DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`                DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
 
--- Seed data: masukkan role default
-INSERT INTO roles (name, label) VALUES
-    ('admin', 'Administrator'),
-    ('user',  'Regular User')
-ON DUPLICATE KEY UPDATE label = VALUES(label);
+-- ── Roles ─────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS `roles` (
+    `id`         BIGINT       NOT NULL AUTO_INCREMENT,
+    `name`       VARCHAR(255) NOT NULL UNIQUE,
+    `guard_name` VARCHAR(255) NOT NULL DEFAULT 'web',
+    `created_at` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY(`id`)
+);
 
--- (Opsional) Seed akun admin awal
--- Password: Admin@123  →  hash bcrypt di bawah dihasilkan dengan saltRounds=12
--- Ganti hash ini jika ingin password berbeda (jalankan: node -e "require('bcrypt').hash('passwordmu',12).then(console.log)")
-INSERT INTO users (name, email, password, role_id) VALUES
-    ('Super Admin', 'admin@ftiproject.com', '$2b$12$u9d2/vfTGj77qlTLOWjrYOH/3hTZPr16JAm.uMoFGHhpzs3yVxlx2', 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name);
+-- ── Permissions ───────────────────────────────────
+CREATE TABLE IF NOT EXISTS `permissions` (
+    `id`         BIGINT       NOT NULL AUTO_INCREMENT,
+    `name`       VARCHAR(255) NOT NULL UNIQUE,
+    `guard_name` VARCHAR(255) NOT NULL DEFAULT 'web',
+    `created_at` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY(`id`)
+);
+
+-- ── Model Has Roles ───────────────────────────────
+CREATE TABLE IF NOT EXISTS `model_has_roles` (
+    `role_id`    BIGINT       NOT NULL,
+    `model_type` VARCHAR(255) NOT NULL DEFAULT 'User',
+    `model_id`   INT UNSIGNED NOT NULL,
+    PRIMARY KEY(`role_id`, `model_id`, `model_type`)
+);
+
+-- ── Role Has Permissions ──────────────────────────
+CREATE TABLE IF NOT EXISTS `role_has_permissions` (
+    `permission_id` BIGINT NOT NULL,
+    `role_id`       BIGINT NOT NULL,
+    PRIMARY KEY(`permission_id`, `role_id`)
+);
+
+-- ── Projects ──────────────────────────────────────
+CREATE TABLE IF NOT EXISTS `projects` (
+    `id`          INT UNSIGNED                          NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name`        VARCHAR(255)                          NOT NULL,
+    `description` TEXT                                  DEFAULT NULL,
+    `status`      ENUM('aktif', 'selesai', 'pending')  NOT NULL DEFAULT 'pending',
+    `start_date`  DATE                                  DEFAULT NULL,
+    `end_date`    DATE                                  DEFAULT NULL,
+    `created_at`  DATETIME                              NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`  DATETIME                              NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);

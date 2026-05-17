@@ -4,258 +4,144 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>
-    <%= title %> — FTI Project
-  </title>
-  <!-- Basecoat UI CSS (Lokal dari node_modules) -->
+  <title><%= title %> — FTI Project</title>
   <link rel="stylesheet" href="/basecoat/basecoat.min.css" />
-  <!-- Basecoat UI JS (Lokal dari node_modules) -->
   <script src="/basecoat/js/basecoat.min.js" defer></script>
   <style>
-    /* Import Google Font (Inter) untuk kesan modern & minimalis */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
-    /* Custom styling minimalis & Override Basecoat UI */
     :root {
-      /* Basecoat UI Variables Override */
       --bc-font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      --fti-blue: #70869e;
-      /* Warna Slate Blue khas FTI Unand */
+      --fti-blue:      #70869e;
       --fti-blue-dark: #5b6f85;
-      --bc-color-primary: var(--fti-blue);
-      --bc-border-radius: 8px;
     }
 
     body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      display:         flex;
+      flex-direction:  column;
+      align-items:     center;
       justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-      font-family: var(--bc-font-family);
+      min-height:      100vh;
+      margin:          0;
+      font-family:     var(--bc-font-family);
       background-color: #f4f6f8;
-      /* Background sangat lembut dengan sedikit nuansa dingin */
-      color: #334155;
+      color:           #334155;
     }
 
     main {
-      width: 100%;
-      max-width: 420px;
-      padding: 2.5rem 2rem;
-      background: #ffffff;
+      width:         100%;
+      max-width:     420px;
+      padding:       2.5rem 2rem;
+      background:    #ffffff;
       border-radius: 12px;
-      box-shadow: 0 10px 40px -10px rgba(112, 134, 158, 0.15);
-      /* Shadow mengikuti nuansa FTI */
+      box-shadow:    0 10px 40px -10px rgba(112, 134, 158, 0.2);
     }
 
-    .text-center {
-      text-align: center;
-    }
-
-    .mb-2 {
-      margin-bottom: 0.5rem;
-    }
-
-    .mb-4 {
-      margin-bottom: 1rem;
-    }
-
-    .mb-6 {
-      margin-bottom: 1.5rem;
-    }
-
-    .mt-6 {
-      margin-top: 1.5rem;
-    }
-
-    .w-full {
-      width: 100%;
-    }
-
-    /* Clean Inputs */
-    .input {
-      display: block;
-      width: 100%;
-      padding: 0.6rem 0;
-      border: none;
-      border-bottom: 2px solid #e2e8f0;
-      background: transparent;
-      font-family: inherit;
-      font-size: 1rem;
-      color: #334155;
-      transition: border-color 0.3s ease;
-      border-radius: 0;
-    }
-
-    .input:focus {
-      outline: none;
-      border-bottom-color: var(--fti-blue);
-      box-shadow: none;
-    }
-
-    .input::placeholder {
-      color: #cbd5e1;
-    }
+    .text-center { text-align: center; }
+    .mb-4        { margin-bottom: 1rem; }
+    .mb-6        { margin-bottom: 1.5rem; }
+    .mt-6        { margin-top: 1.5rem; }
 
     label {
-      display: block;
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: #475569;
+      display:       block;
+      font-size:     0.875rem;
+      font-weight:   500;
+      color:         #475569;
       margin-bottom: 0.25rem;
     }
 
-    /* Styling untuk inline error */
-    .error-text {
-      color: #ef4444;
-      font-size: 0.875rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
+    .input {
+      display:       block;
+      width:         100%;
+      padding:       0.6rem 0;
+      border:        none;
+      border-bottom: 2px solid #e2e8f0;
+      background:    transparent;
+      font-family:   inherit;
+      font-size:     1rem;
+      color:         #334155;
+      transition:    border-color 0.3s ease;
+      border-radius: 0;
+      box-sizing:    border-box;
     }
 
-    .input-error {
-      border-bottom-color: #ef4444 !important;
+    .input:focus {
+      outline:            none;
+      border-bottom-color: var(--fti-blue);
     }
 
-    .hidden {
-      display: none !important;
-    }
+    .input::placeholder { color: #cbd5e1; }
 
-    /* Custom Button Style */
-    .btn-dark {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      padding: 0.8rem 1rem;
-      background-color: var(--fti-blue);
-      color: white;
-      font-size: 1rem;
-      font-weight: 600;
-      border: none;
+    /* Alert error dari server */
+    .error-box {
+      display:       flex;
+      align-items:   center;
+      gap:           0.5rem;
+      background:    #fee2e2;
+      color:         #991b1b;
       border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.2s;
+      padding:       0.75rem 1rem;
+      font-size:     0.875rem;
+      margin-bottom: 1rem;
     }
 
-    .btn-dark:hover {
-      background-color: var(--fti-blue-dark);
+    .btn-login {
+      display:         inline-flex;
+      align-items:     center;
+      justify-content: center;
+      width:           100%;
+      padding:         0.8rem 1rem;
+      background-color: var(--fti-blue);
+      color:           white;
+      font-size:       1rem;
+      font-weight:     600;
+      border:          none;
+      border-radius:   8px;
+      cursor:          pointer;
+      transition:      background-color 0.2s;
     }
 
-    .btn-dark:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-    }
+    .btn-login:hover { background-color: var(--fti-blue-dark); }
   </style>
 </head>
 
 <body>
-
   <main>
     <div class="text-center mb-6">
-      <!-- Area untuk Logo FTI Unand (Letakkan gambar asli Anda di folder public/images/fti-logo.png) -->
       <img src="/images/fti-logo.png" alt="Logo FTI Unand"
-        style="height: 110px; width: auto; max-width: 100%; object-fit: contain; margin: 0 auto 1.5rem auto; display: block;"
-        onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<div style=\'height:60px; width:150px; margin: 0 auto 0.75rem auto; background:#e2e8f0; display:flex; align-items:center; justify-content:center; border-radius:8px; color:#64748b; font-size:0.875rem; font-weight:500;\'>LOGO FTI</div>');">
-
-      <h1 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 0; color: #1e293b;">FTI Project</h1>
+        style="height:110px; width:auto; max-width:100%; object-fit:contain; margin:0 auto 1.5rem auto; display:block;"
+        onerror="this.style.display='none'">
+      <h1 style="font-size:1.5rem; font-weight:600; margin:0; color:#1e293b;">FTI Project</h1>
     </div>
 
-    <form id="loginForm" novalidate>
+    <% if (error) { %>
+    <div class="error-box" role="alert">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" x2="12" y1="8" y2="12"/>
+        <line x1="12" x2="12.01" y1="16" y2="16"/>
+      </svg>
+      <span><%= error %></span>
+    </div>
+    <% } %>
+
+    <form method="POST" action="/auth/login" novalidate>
       <div class="mb-4">
         <label for="email">Email</label>
-        <input class="input" type="email" id="email" name="email" placeholder="Masukkan email Anda" autocomplete="email"
-          readonly onfocus="this.removeAttribute('readonly');" required />
+        <input class="input" type="email" id="email" name="email"
+          placeholder="Masukkan email Anda" autocomplete="email" required />
       </div>
 
       <div class="mb-4">
         <label for="password">Password</label>
-        <div style="position: relative;">
-          <input class="input" type="password" id="password" name="password" placeholder="Masukkan password Anda"
-            autocomplete="current-password" readonly onfocus="this.removeAttribute('readonly');" required />
-        </div>
-
-        <!-- Inline Error Message -->
-        <div id="inline-error" class="hidden error-text">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10" />
-            <line x1="12" x2="12" y1="8" y2="12" />
-            <line x1="12" x2="12.01" y1="16" y2="16" />
-          </svg>
-          <span id="inline-error-msg"></span>
-        </div>
+        <input class="input" type="password" id="password" name="password"
+          placeholder="Masukkan password Anda" autocomplete="current-password" required />
       </div>
 
-      <button type="submit" id="loginBtn" class="btn-dark mt-6">
-        <span id="btnText">Masuk</span>
-      </button>
+      <button type="submit" id="loginBtn" class="btn-login mt-6">Masuk</button>
     </form>
   </main>
-
-  <script>
-    // Tampilkan error inline
-    function showAlert(msg) {
-      const errorContainer = document.getElementById('inline-error');
-      const errorMsg = document.getElementById('inline-error-msg');
-      const emailInput = document.getElementById('email');
-      const pwdInput = document.getElementById('password');
-
-      errorMsg.textContent = msg;
-      errorContainer.classList.remove('hidden');
-
-      // Tambahkan border merah ke input
-      emailInput.classList.add('input-error');
-      pwdInput.classList.add('input-error');
-    }
-
-    // Sembunyikan error saat user mulai mengetik ulang
-    function clearError() {
-      document.getElementById('inline-error').classList.add('hidden');
-      document.getElementById('email').classList.remove('input-error');
-      document.getElementById('password').classList.remove('input-error');
-    }
-
-    document.getElementById('email').addEventListener('input', clearError);
-    document.getElementById('password').addEventListener('input', clearError);
-
-    // Handle form submit via fetch
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const btn = document.getElementById('loginBtn');
-      const btnText = document.getElementById('btnText');
-
-      btn.disabled = true;
-      btnText.textContent = 'Memproses...';
-
-      try {
-        const res = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: document.getElementById('email').value.trim(),
-            password: document.getElementById('password').value,
-          }),
-        });
-        const data = await res.json();
-
-        if (res.ok) {
-          window.location.href = '/dashboard';
-        } else {
-          showAlert(data.message || 'Login gagal. Periksa kembali email dan password.');
-          btn.disabled = false;
-          btnText.textContent = 'Masuk';
-        }
-      } catch {
-        showAlert('Tidak dapat terhubung ke server. Coba lagi.');
-        btn.disabled = false;
-        btnText.textContent = 'Masuk';
-      }
-    });
-  </script>
 </body>
 
 </html>
